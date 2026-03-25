@@ -9,3 +9,7 @@ function add(sum){
 function sub(sub){
     return sub;
 }
+
+function mul(mul){
+    return mul;
+}
