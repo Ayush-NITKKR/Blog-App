@@ -29,7 +29,45 @@ async function handleCreatePost(req,res) {
     }
     
 }
+async function handleGetPost(req, res) {
+
+    try {
+        
+        const data =await postModel.find({});
+
+        res.status(200).json({
+            success: true,
+            data:data,
+            message:"ALl the entrys are shown"
+        })
+    } catch (error) {
+         res.status(500).json({
+            success : false,
+            message: error.message
+        })
+    }
+    
+}
+async function handleGetIndiPost(req, res) {
+    try {
+        const data = await postModel.findById(req.params.Postid);
+        res.status(200).json({
+            success: true,
+            data:data,
+            message:"the entrys are shown"
+        })
+
+        
+    } catch (error) {
+         res.status(500).json({
+            success : false,
+            message: error.message
+        })       
+    }
+}
 
 module.exports = {
-    handleCreatePost
+    handleCreatePost,
+    handleGetPost,
+    handleGetIndiPost
 }
