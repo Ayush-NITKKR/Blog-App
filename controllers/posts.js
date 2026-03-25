@@ -65,9 +65,38 @@ async function handleGetIndiPost(req, res) {
         })       
     }
 }
+async function handleLike(req, res) {
+    try {
 
+        const post_id = req.params.Postid;
+
+        const updatedPost = await postModel.findByIdAndUpdate(post_id,
+            { $inc: { like: 1 } },   // 👈 increment safely
+            { new: true }
+        )
+        if(!updatedPost){
+            res.status(404).json({
+                success: false,
+                message:"Not found"
+            })
+        }
+        res.status(200).json({
+                success: true,
+                data:updatedPost,
+                message:"Post is liked successfully",
+        })
+        
+    } catch (error) {
+          res.status(500).json({
+            success : false,
+            message: error.message
+        })   
+    }
+    
+}
 module.exports = {
     handleCreatePost,
     handleGetPost,
-    handleGetIndiPost
+    handleGetIndiPost,
+    handleLike
 }
