@@ -1,5 +1,6 @@
 const { error } = require('node:console');
 const postModel = require('../models/post');
+const commentModel = require('../models/comment');
 
 
 async function handleCreatePost(req,res) {
@@ -108,7 +109,100 @@ async function handleUnlike(req, res) {
                 message:"Post is Unliked successfully",
         })
     } catch (error) {
-        
+          res.status(500).json({
+            success : false,
+            message: error.message
+        })
+    }
+    
+}
+async function handleCreateComment(req,res) {
+
+    try {
+        const post_id = req.params.Postid;
+
+        const {text} = req.body;
+
+        if(!post_id || !text){
+           return res.status(400).json({
+                success:false,
+                message:"No entry"
+            })
+        }
+
+        const updatedPost =await commentModel.create({
+            text,
+            post_id
+        })
+        res.status(200).json({
+                success: true,
+                data:updatedPost,
+                message:"Comment is added successfully",
+        })
+    } catch (error) {
+          res.status(500).json({
+            success : false,
+            message: error.message
+        })
+    }
+    
+}
+async function handleUpdateComment(req,res) {
+
+    try {
+        const comment_id = req.params.Commentid;
+
+        const {text} = req.body;
+
+        if(!comment_id || !text){
+           return res.status(400).json({
+                success:false,
+                message:"No entry"
+            })
+        }
+
+        const updatedComment =await commentModel.findByIdAndUpdate(comment_id,{
+            text
+        })
+        res.status(200).json({
+                success: true,
+                data:updatedComment,
+                message:"Comment is  Updated successfully",
+        })
+    } catch (error) {
+          res.status(500).json({
+            success : updatedComment,
+            message: error.message
+        })
+    }
+    
+}
+async function handleGetComments(req,res) {
+
+    try {
+        const post_id = req.params.Postid;
+
+
+        if(!post_id){
+           return res.status(400).json({
+                success:false,
+                message:"No entry"
+            })
+        }
+
+        const comments = await commentModel.find({
+    post_id
+});
+        res.status(200).json({
+                success: true,
+                data:comments,
+                message:"comment are show successfully",
+        })
+    } catch (error) {
+          res.status(500).json({
+            success : false,
+            message: error.message
+        })
     }
     
 }
@@ -117,5 +211,8 @@ module.exports = {
     handleGetPost,
     handleGetIndiPost,
     handleLike,
-    handleUnlike
+    handleUnlike,
+    handleCreateComment,
+    handleGetComments,
+    handleUpdateComment
 }
