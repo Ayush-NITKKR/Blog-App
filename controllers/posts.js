@@ -94,9 +94,28 @@ async function handleLike(req, res) {
     }
     
 }
+async function handleUnlike(req, res) {
+    try {
+        const post_id = req.params.Postid;
+
+        const updatedPost = await postModel.findByIdAndUpdate(post_id,
+            { $inc: { like:  -1 } },   // 👈 increment safely
+            { new: true }
+        )
+        res.status(200).json({
+                success: true,
+                data:updatedPost,
+                message:"Post is Unliked successfully",
+        })
+    } catch (error) {
+        
+    }
+    
+}
 module.exports = {
     handleCreatePost,
     handleGetPost,
     handleGetIndiPost,
-    handleLike
+    handleLike,
+    handleUnlike
 }
